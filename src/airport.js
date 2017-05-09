@@ -1,6 +1,7 @@
-var Airport = function(){
+var Airport = function(weather = new Weather()) {
   this._CAPACITY = 20
   this._planes = []
+  this._weather = weather
 };
 
   Airport.prototype.planes = function() {
@@ -16,9 +17,21 @@ var Airport = function(){
   };
 
   Airport.prototype.land = function(plane) {
-    return  this._planes.push(plane);
+    if (this._weather.condition() === 'stormy') {
+      throw 'Weather is bad';
+    }
+    else {
+      return  this._planes.push(plane);
+    }
   };
 
   Airport.prototype.takeOff = function(plane) {
     return  this._planes.pop(plane);
   };
+
+
+
+  // Airport.prototype._isStormy = function() {
+  //   var weather = new Weather();
+  //   return  weather.condition ==
+  // };

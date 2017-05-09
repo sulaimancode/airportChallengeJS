@@ -4,9 +4,9 @@ describe('Airport', function() {
   var weather;
 
   beforeEach(function() {
-    airport = new Airport();
-    plane = new Plane();
-    weather = new Weather();
+    weather = { condition:  function(){} };
+    airport = new Airport(weather);
+    plane = jasmine.createSpy('plane')
   });
 
   describe('::new', function() {
@@ -32,8 +32,16 @@ describe('Airport', function() {
   describe('#land', function() {
 
     it('lands a plane on airport', function() {
+      spyOn(weather, "condition").and.returnValue('sunny');
       airport.land(plane)
       expect(airport.planes()).toContain(plane)
+    });
+
+    describe('when weather condition is stormy', function() {
+      it('does not land a plane', function() {
+        spyOn(weather, "condition").and.returnValue('stormy');
+        expect(function(){ airport.land(plane) } ).toThrow("Weather is bad")
+      });
     });
 
   });
@@ -41,6 +49,7 @@ describe('Airport', function() {
   describe('#takeOff', function() {
 
     it('lets plane take off the airport', function() {
+      spyOn(weather, "condition").and.returnValue('sunny');
       airport.land(plane)
       airport.takeOff(plane)
       expect(airport.planes()).not.toContain(plane)
